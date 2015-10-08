@@ -1,0 +1,120 @@
+<?php
+/**
+ * @var \Bluz\Grid\Grid $grid
+ */
+?>
+<script>
+    // use data-spy="grid" for use AJAX for reload grid
+    require(['bluz.grid']);
+</script>
+
+<div class="menu-block clearfix" data-spy="grid"
+     data-grid="<?= $grid->getUid() ?>">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="col-lg-3">
+            <a href="<?= $this->url('menu', 'crud') ?>"
+               class="btn btn-primary navbar-btn dialog" data-ajax-method="get"
+               data-modal-style="width:800px"><?= __('Create') ?></a>
+        </div>
+        <div class="col-lg-4 dropdown" id="food-dropdown-list">
+            <button class="btn btn-default"
+                    data-toggle="dropdown">Categories<span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="<?= $this->url('menu', 'grid') ?>"
+                       class="btn btn-default ajax">All categories</a>
+                </li>
+                <?php foreach ($categories['children'] as $category) : ?>
+                    <li><a href="<?= $grid->filter('categoryId', 'eq',
+                            $category['id']) ?>"
+                           class="btn btn-default ajax"><?= $category['name'] ?></a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+
+
+        </div>
+        <div class="col-lg-5">
+            <form action="<?= $this->url('menu', 'grid') ?>"
+                  class="navbar-form filter-form pull-right">
+                <div class="input-group">
+                    <?php echo
+                    $this->partial(
+                        'grid/filter-search.phtml',
+                        [
+                            'grid' => $grid,
+                            'filters' => [
+                                'title' => __('Title'),
+                                'description' => __('Description')
+                            ]
+                        ]
+                    )
+                    ?>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default"
+                                type="submit"><?= __("Search") ?></button>
+                    </span>
+                </div>
+            </form>
+        </div>
+
+    </nav>
+
+    <?= $this->partial('grid/total.phtml', ['grid' => $grid]) ?>
+    <?= $this->partial('grid/limit.phtml', ['grid' => $grid]) ?>
+
+    <table class="table table-hover grid food">
+        <thead>
+        <tr>
+            <th width="40px"><?= __('Id') ?></th>
+            <th>
+                <a href="<?= $grid->order('title') ?: '#' ?>"><?= __('Title') ?></a>
+            </th>
+            <th><?= __('Description') ?></th>
+            <th width="160px"><a
+                    href="<?= $grid->order('categoryId') ?>"><?= __('Category') ?></a>
+            </th>
+            <th width="160px"><a
+                    href="<?= $grid->order('cost') ?>"><?= __('cost') ?></a>
+            </th>
+            <th width="72px"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($this->grid->getData() as $row) : ?>
+            <tr>
+                <td><?= $row->id ?></td>
+                <td><?= esc($row->title) ?></
+                ></td>
+                <td><?= esc($row->description) ?></td>
+                <td><?= esc($row->category) ?></td>
+                <td><?= $row->cost ?></td>
+                <td class="controls">
+                    <a href="<?= $this->url('menu', 'crud',
+                        ['id' => $row->id]) ?>"
+                       class="btn btn-primary btn-xs dialog"
+                       data-ajax-method="get" data-modal-style="width:800px">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a href="<?= $this->url('menu', 'crud',
+                        ['id' => $row->id]) ?>"
+                       class="confirm btn btn-xs btn-danger ajax"
+                       data-ajax-method="delete">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <?= $this->partial('grid/empty-rows.phtml', ['grid' => $grid]) ?>
+    <?= $this->partial('grid/pagination.phtml', ['grid' => $grid]) ?>
+    <?= $this->partial('grid/total.phtml', ['grid' => $grid]) ?>
+
+</div>
+
+
+

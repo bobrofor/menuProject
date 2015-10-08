@@ -1,0 +1,20 @@
+<?php
+/**
+ * @var \Bluz\Grid\Grid $grid
+ */
+?>
+<script>
+    // use data-spy="grid" for use AJAX for reload grid
+    require(['bluz.grid']);
+</script>
+
+<div class="clearfix" data-spy="grid" data-grid="<?=$grid->getUid()?>">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="col-lg-6">
+            <a href="<?=$this->url('menu', 'crud')?>" class="btn btn-primary navbar-btn dialog" data-ajax-method="get" data-modal-style="width:800px"><?=__('Create')?></a>
+        </div>
+
+    </nav>
+
+
+</div>
