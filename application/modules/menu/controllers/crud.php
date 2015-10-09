@@ -24,18 +24,33 @@ return
         $foodCategories = reset($foodTree);
         $crudController = new Controller\Crud();
         $crudController->setCrud(Menu\Crud::getInstance());
-        $output = $crudController();
+//        $output = $crudController();
 
-        $output['row']->getRelations('Media');
-
-var_dump($output['row']->row);
-
-        //var_dump($qwerty);
-        //$view->media =$qwerty;
         $view->foodCategories = $foodCategories['children'];
 
-        //$output['foodCategories'] = $foodCategories['children'];
+//        $updateMode = !is_array($output);
+//        $createMode = empty($output['row']->id);
+
+       // if (!$updateMode && !$createMode) {
+
+//        $view->media = $output['row']->getRelations('Media');
+//        die();
+
+       // }
+
+        /*$dishtable = DishesMedia\Table::getInstance();
+
+        $condition = is_array($output) && !empty($output['row']->id);
 
 
-        return $output;
+        if ($condition) {
+            $media = $dishtable->getMediaByDishId($output['row']->id);
+            $view->media = $media;
+        }
+
+
+        $unusedMedia = $dishtable->getUnusedMedia();
+        $view->unusedMedia = $unusedMedia;
+*/
+        return $crudController();
     };

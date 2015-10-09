@@ -51,13 +51,14 @@
                                 <option
                                     value="<?php echo esc($category['id']) ?>"
                                     <?php if (esc($category['id']) == esc($row->categoryId)) : ?>
-                                        <?php echo "selected=selected";?>
+                                        <?php echo "selected=selected"; ?>
                                     <?php endif ?>
                                 ><?php echo esc($category['name']) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="control-label col-lg-2"
                            for="cost"><?= __('Cost') ?>:</label>
@@ -68,19 +69,85 @@
                                required/>
                     </div>
                 </div>
-                <div class="form-group ">
 
+                <h4>Used media</h4>
+
+                <div class="form-group row clearfix ">
+                    <?php if (isset($row)): ?>
+                        <?php foreach ($row->getRelations('Media') as $img): ?>
+                            <div class="panel panel-default col-lg-3">
+                                <div class="panel-heading">
+                                    <div class="pull-right">
+                                        <a href="<?= $this->url('menu',
+                                            'delete-media',
+                                            [
+//                                                'mediaId' => $img['id'],
+//                                                'dishId' => $row['id']
+                                            ]) ?>"
+                                           class="confirm btn btn-xs btn-danger ajax"
+                                        >
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <a href="<?= $this->baseUrl($img['file']) ?>"
+                                       class="thumbnail bluz-preview">
+                                        <img style="height:80px"
+                                             src="<?= $this->baseUrl($img['preview'] ?: $img['file']) ?>"
+                                             class="img-polaroid"
+                                             alt="<?= $img['title'] ?>"/>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
 
 
                 </div>
+
+
+                <h4>Unused media</h4>
+
+                <div class="form-group row clearfix ">
+                    <?php if (isset($unusedMedia)): ?>
+                        <?php foreach ($unusedMedia as $img): ?>
+                            <div class="panel panel-default col-lg-3">
+                                <div class="panel-heading">
+                                    <div class="pull-right">
+                                        <a href="<?= $this->url('menu',
+                                            'add-media', [
+                                                'mediaId' => $img['id'],
+                                                'dishId' => $row['id']
+                                            ]) ?>"
+                                           class="btn btn-xs btn-primary ">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <a href="<?= $this->baseUrl($img['file']) ?>"
+                                       class="thumbnail bluz-preview">
+                                        <img style="height:80px"
+                                             src="<?= $this->baseUrl($img['preview'] ?: $img['file']) ?>"
+                                             class="img-polaroid"
+                                             alt="<?= $row['title'] ?>"/>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit"
+                            class="btn btn-primary"><?= __('Save') ?></button>
+                    <a href="#" class="btn btn-default"
+                       data-dismiss="modal"><?= __('Close') ?></a>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="submit"
-                        class="btn btn-primary"><?= __('Save') ?></button>
-                <a href="#" class="btn btn-default"
-                   data-dismiss="modal"><?= __('Close') ?></a>
-            </div>
-        </div>
     </form>
 
 <?php
