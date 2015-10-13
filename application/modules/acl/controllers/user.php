@@ -28,7 +28,7 @@ function ($id) use ($view) {
      * @var Bootstrap $this
      */
     $user = Users\Table::findRow($id);
-
+var_dump($id);
     if (!$user) {
         throw new Exception('User ID is incorrect');
     }

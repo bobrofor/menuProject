@@ -50,7 +50,7 @@ class Table extends \Bluz\Db\Table
 
     }
 
-    public function getUnusedMedia()
+    public static function getUnusedMedia()
     {
         $select = "select m.* from media m where id NOT IN (SELECT mediaId FROM dishes_media)";
 

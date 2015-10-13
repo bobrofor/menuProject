@@ -76,18 +76,17 @@
             <th width="160px"><a
                     href="<?= $grid->order('categoryId') ?>"><?= __('Category') ?></a>
             </th>
-            <th width="160px"><a
+            <th width="120px"><a
                     href="<?= $grid->order('cost') ?>"><?= __('cost') ?></a>
             </th>
-            <th width="72px"></th>
+            <th width="100px"></th>
         </tr>
         </thead>
         <tbody>
         <?php foreach ($this->grid->getData() as $row) : ?>
             <tr>
                 <td><?= $row->id ?></td>
-                <td><?= esc($row->title) ?></
-                ></td>
+                <td><?= esc($row->title) ?></td>
                 <td><?= esc($row->description) ?></td>
                 <td><?= esc($row->category) ?></td>
                 <td><?= $row->cost ?></td>
@@ -103,6 +102,12 @@
                        class="confirm btn btn-xs btn-danger ajax"
                        data-ajax-method="delete">
                         <i class="fa fa-trash-o"></i>
+                    </a>
+                    <a href="<?= $this->url('menu', 'media',
+                        ['id' => $row->id]) ?>"
+                       class=" btn btn-xs btn-success dialog"
+                       data-ajax-method="get" data-modal-style="width:800px">
+                        <i class="fa fa-camera-retro"></i>
                     </a>
                 </td>
             </tr>
