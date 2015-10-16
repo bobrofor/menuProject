@@ -4,6 +4,7 @@ nbproject
 /data/
 !/data/locale
 /public/.htaccess
+/public/uploads
 !.stub
 composer.lock
 composer.phar

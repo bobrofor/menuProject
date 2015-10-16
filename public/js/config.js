@@ -16,7 +16,13 @@ require.config({
         "redactor.imagemanager": './../redactor/plugins/imagemanager',
         // see more at https://cdnjs.com/
         "underscore": '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min',
-        "backbone": '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min'
+        "backbone": '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min',
+        "jquery.fileupload":'./../jquery.fileupload/js/jquery.fileupload',
+        "jquery.fileupload-process":'./../jquery.fileupload/js/jquery.fileupload-process',
+        "jquery.fileupload-image":'./../jquery.fileupload/js/jquery.fileupload-image',
+
+        "menu.fileupload":'./menu.fileupload',
+        "jquery.ui.widget":'./../jquery.fileupload/js/vendor/jquery.ui.widget'
     },
     shim: {
         "bootstrap": {

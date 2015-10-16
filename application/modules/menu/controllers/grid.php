@@ -20,6 +20,7 @@ return
          * @var \Bluz\View\View $view
          */
         Layout::setTemplate('dashboard.phtml');
+        Layout::headStyle($view->baseUrl('jquery.fileupload/css/jquery.fileupload.css'));
         Layout::breadCrumbs(
             [
                 $view->ahref('Dashboard', ['dashboard', 'index']),

@@ -5,7 +5,7 @@
 ?>
     <script>
         // use data-spy="grid" for use AJAX for reload grid
-        require(['bluz.categories', 'bluz.grid']);
+        require(['bluz.categories', 'bluz.grid','menu.fileupload']);
     </script>
 <?php $uid = uniqid('form_'); ?>
     <form id="<?= $uid ?>" action="<?= $this->url('menu', 'crud') ?>"
@@ -79,6 +79,8 @@
                 </div>
             </div>
     </form>
+
+
 
 <?php
 // need for plain request
