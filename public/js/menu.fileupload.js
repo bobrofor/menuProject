@@ -1,26 +1,18 @@
-
-define(['jquery','jquery.fileupload','jquery.fileupload-process'],function($){
+define(['jquery', 'jquery.fileupload'], function ($) {
 
     'use strict';
 
-    $('#fileupload').fileupload({
+    $('input#fileupload').fileupload({
         url: 'menu/upload',
         dataType: 'json',
         done: function (e, data) {
-            $.each(data.result.files, function (index, file) {
-                $('<p/>').text(file.name).appendTo('#files');
+            $('#files').html('');
+            $.each(data._response.result, function (index, file) {
+                $('<p/>').html('<img  style="height:100px" class="img-thumbnail" src="' + file.path + '" />')
+                    .appendTo('#files');
             });
-        },
-        progressall: function (e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress .progress-bar').css(
-                'width',
-                progress + '%'
-            );
         }
-    }).prop('disabled', !$.support.fileInput)
-        .parent().addClass($.support.fileInput ? undefined : 'disabled');
-
+    });
 
 
 });

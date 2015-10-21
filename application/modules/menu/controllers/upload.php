@@ -1,19 +1,15 @@
 <?php
-/**
- * Upload media content to server
- *
- * @author   Anton Shevchuk
- * @created  06.02.13 18:16
- */
+
 
 /**
  * @namespace
  */
 namespace Application;
 
-use Application\Menu\UploadHandler;
-use Bluz\Proxy\Config;
 use Bluz\Proxy\Request;
+use Bluz\Proxy\Session;
+use Bluz\Proxy\Config;
+use Bluz\Request\RequestException;
 
 
 return
@@ -22,21 +18,40 @@ return
      * @return array
      */
     function () {
-        $uploadDir = Config::getModuleData('media', 'upload_path');
 
-        $options = array(
-            'upload_dir' => $uploadDir . '/' . $this->user()->id . '/media/',
-            'upload_url' => 'http://menu.prj/uploads/'. $this->user()->id . '/media/');
+        $this->useJson();
 
-        $uphandler = new UploadHandler($options);
-        $files=$uphandler->get_response();
-        if(!empty($files) && is_array($files))
-        {
+        //get saved data
+        $existFilesData = Session::get('files');
+        $files = unserialize($existFilesData);
+        //get paths to upload directory
+        $path = Config::getModuleData('menu', 'full_path');
+        $relativePath = Config::getModuleData('menu', 'relative_path');
+        //get new file,that saved in /tmp directory
+        $newFileData = Request::getFileUpload()->getFile('files');
+        //validate file name
+        $newFileData->createValidName($path);
+        $newFileData->moveTo($path);
+        //merge new and exist files data
+        if ($existFilesData) {
+            $fileObjects = $files;
+            array_push($fileObjects, $newFileData);
 
-            foreach($files as $file)
-            {
+        } else {
+            $fileObjects = array($newFileData);
+        }
+        Session::set('files', serialize($fileObjects));
 
-            }
+        $result = array();
+        foreach ($fileObjects as $file) {
+            $result[] = [
+                'title' => $file->getName(),
+                'type' => $file->getMimeType(),
+                'path' => $relativePath . $file->getFullName()
+
+            ];
 
         }
+
+        return $result;
     };

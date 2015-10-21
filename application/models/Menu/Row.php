@@ -12,33 +12,13 @@ namespace Application\Menu;
 use Application\Users;
 use Bluz\Validator\Traits\Validator;
 use Bluz\Validator\Validator as v;
+use Application\DishesMedia;
 
 /**
- * Pages Row
- *
- * @package  Application\Pages
- *
- * @property integer $id
- * @property string $title
- * @property string $alias
- * @property string $content
- * @property string $keywords
- * @property string $description
- * @property string $created
- * @property string $updated
- * @property integer $userId
- *
- * @SWG\Model(id="Pages")
- * @SWG\Property(name="id", type="integer")
- * @SWG\Property(name="title", type="string", required=true)
- * @SWG\Property(name="alias", type="string", required=true)
- * @SWG\Property(name="content", type="string", required=true)
- * @SWG\Property(name="keywords", type="string", description="Meta keywords")
- * @SWG\Property(name="description", type="string", description="Meta description")
- * @SWG\Property(name="created", type="string", format="date-time")
- * @SWG\Property(name="updated", type="string", format="date-time")
- * @SWG\Property(name="userId", type="integer")
+ * Class Row
+ * @package Application\Menu
  */
+
 class Row extends \Bluz\Db\Row
 {
     use Validator;
@@ -101,4 +81,10 @@ class Row extends \Bluz\Db\Row
     {
         $this->updated = gmdate('Y-m-d H:i:s');
     }
+
+    protected function afterDelete()
+    {
+        DishesMedia\Table::delete(['mediaId'=>$this->id]);
+    }
+
 }

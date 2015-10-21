@@ -10,6 +10,7 @@
 namespace Application\Media;
 
 use Application\Users;
+use Application\DishesMedia;
 use Bluz\Validator\Traits\Validator;
 use Bluz\Validator\Validator as v;
 use Image\Thumbnail;
@@ -102,5 +103,7 @@ class Row extends \Bluz\Db\Row
         if (is_file(PATH_PUBLIC .'/'. $this->preview)) {
             @unlink(PATH_PUBLIC .'/'. $this->preview);
         }
+
+        DishesMedia\Table::delete(['mediaId'=>$this->id]);
     }
 }

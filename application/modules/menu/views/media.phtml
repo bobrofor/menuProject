@@ -35,27 +35,6 @@
                 <?php endforeach; ?>
             <?php endif; ?>
 
-            <?php if (!empty($unusedMedia)): ?>
-                <?php foreach ($unusedMedia as $i => $media): ?>
-                    <div class="panel panel-default col-lg-3">
-                        <div class="panel-heading">
-                            <div class="pull-right">
-                                <input type="checkbox" name="media[]"
-                                       value="<?= $media['id'] ?>"/>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <a href="<?= $this->baseUrl($media['file']) ?>"
-                               class="thumbnail bluz-preview">
-                                <img style="height:80px"
-                                     src="<?= $this->baseUrl($media['preview'] ?: $media['file']) ?>"
-                                     class="img-polaroid"
-                                     alt="<?= $media['title'] ?>"/>
-                            </a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
 
 
         </div>

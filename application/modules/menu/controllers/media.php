@@ -7,6 +7,8 @@ use Bluz\Proxy\Messages;
 use Bluz\Proxy\Request;
 use Application\Menu;
 use Bluz\Db\Exception\RelationNotFoundException;
+use Bluz\Proxy\Layout;
+use Bluz\Proxy\Session;
 
 
 return
@@ -33,29 +35,4 @@ return
             }
         }
 
-
-        if (Request::isPost()) {
-
-            $media = Request::getParam('media');
-            $dishId = Request::getParam('dishId');
-
-            $dmTable = DishesMedia\Table::getInstance();
-            $dmTable::delete(['dishId' => $dishId]);
-
-            foreach ($media as $image) {
-
-                $dmTable::insert(array(
-                    'dishId' => $dishId,
-                    'mediaId' => $image
-                ));
-
-            }
-            $view->dish = $dish;
-
-            Messages::addSuccess('Dishes media was updated');
-            return false;
-
-        }
-
-        $view->dish = $dish;
     };

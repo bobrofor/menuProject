@@ -4,8 +4,7 @@
  */
 ?>
     <script>
-        // use data-spy="grid" for use AJAX for reload grid
-        require(['bluz.categories', 'bluz.grid','menu.fileupload']);
+        require(['bluz.categories', 'menu.fileupload']);
     </script>
 <?php $uid = uniqid('form_'); ?>
     <form id="<?= $uid ?>" action="<?= $this->url('menu', 'crud') ?>"
@@ -70,16 +69,29 @@
                     </div>
                 </div>
 
+                <span class="btn btn-success fileinput-button">
+                     <i class="glyphicon glyphicon-plus"></i>
+                    <span>Select files...</span>
+                    <!-- The file input field used as target for the file upload widget -->
+                    <input id="fileupload" type="file" name="files[]" multiple>
+                </span>
 
-                <div class="modal-footer">
-                    <button type="submit"
-                            class="btn btn-primary"><?= __('Save') ?></button>
-                    <a href="#" class="btn btn-default"
-                       data-dismiss="modal"><?= __('Close') ?></a>
+
+                <br>
+                <!-- The container for the uploaded files -->
+                <div id="files" class="files">
                 </div>
-            </div>
-    </form>
 
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit"
+                        class="btn btn-primary"><?= __('Save') ?></button>
+                <a href="#" class="btn btn-default"
+                   data-dismiss="modal"><?= __('Close') ?></a>
+            </div>
+        </div>
+    </form>
 
 
 <?php

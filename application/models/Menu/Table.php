@@ -35,8 +35,8 @@ class Table extends \Bluz\Db\Table
     protected $primary = array('id');
 
 
-
-    public function init() {
+    public function init()
+    {
 
         $this->linkTo('id', 'DishesMedia', 'dishId');
         $this->linkToMany('Media', 'DishesMedia');

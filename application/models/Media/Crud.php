@@ -51,7 +51,7 @@ class Crud extends \Bluz\Crud\Table
         /**
          * Generate image name
          */
-        $fileName = strtolower(isset($data['title'])?$data['title']:$file->getName());
+        $fileName = strtolower(isset($data['title']) ? $data['title'] : $file->getName());
 
         // Prepare filename
         $fileName = preg_replace('/[ _;:]+/i', '-', $fileName);
@@ -67,9 +67,9 @@ class Crud extends \Bluz\Crud\Table
         $originFileName = $fileName;
         $counter = 0;
 
-        while (file_exists($this->uploadDir .'/'. $fileName .'.'. $file->getExtension())) {
+        while (file_exists($this->uploadDir . '/' . $fileName . '.' . $file->getExtension())) {
             $counter++;
-            $fileName = $originFileName .'-'. $counter;
+            $fileName = $originFileName . '-' . $counter;
         }
 
         // Setup new name and move to user directory
@@ -78,7 +78,7 @@ class Crud extends \Bluz\Crud\Table
 
         $this->uploadDir = substr($this->uploadDir, strlen(PATH_PUBLIC) + 1);
 
-        $data['file'] = $this->uploadDir .'/'. $file->getFullName();
+        $data['file'] = $this->uploadDir . '/' . $file->getFullName();
         $data['type'] = $file->getMimeType();
 
         $row = $this->getTable()->create();
@@ -107,5 +107,35 @@ class Crud extends \Bluz\Crud\Table
         $this->uploadDir = $directory;
 
         return $this;
+    }
+
+
+    /**
+     * @param $file
+     * @return mixed
+     * @throws Exception
+     */
+    public function createExistOne($file)
+    {
+
+        if (!$file or $file->getErrorCode() != UPLOAD_ERR_OK) {
+            if ($file->getErrorCode() == UPLOAD_ERR_NO_FILE) {
+                throw new Exception("Please choose file for upload");
+            }
+            throw new Exception("Sorry, I can't receive file");
+        }
+
+        $uploadDir = substr($this->uploadDir, strlen(PATH_PUBLIC) + 1);
+        $filesData = array(
+            'title' => $file->getName(),
+            'file' => $uploadDir . $file->getFullName(),
+            'type' => $file->getMimeType(),
+        );
+
+
+        $row = $this->getTable()->create($filesData);
+
+        $row->setFromArray($filesData);
+        return $row->save();
     }
 }
