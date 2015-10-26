@@ -9,7 +9,6 @@ namespace Application;
 use Bluz\Proxy\Request;
 use Bluz\Proxy\Session;
 use Bluz\Proxy\Config;
-use Bluz\Request\RequestException;
 
 
 return

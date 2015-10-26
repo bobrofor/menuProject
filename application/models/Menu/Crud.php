@@ -14,7 +14,9 @@ use Application\Media;
 use Application\DishesMedia;
 use Application\Exception;
 use Bluz\Proxy\Config;
-
+use Bluz\Proxy\Db;
+use Bluz\Proxy\Request;
+use Bluz\Proxy\Response;
 
 class Crud extends \Bluz\Crud\Table
 {
@@ -40,10 +42,8 @@ class Crud extends \Bluz\Crud\Table
     public function createOne($data)
     {
         $id = parent::createOne($data);
-
-
         $this->saveAdditionData($data);
-
+        return $id;
     }
 
     /**
@@ -78,5 +78,46 @@ class Crud extends \Bluz\Crud\Table
         Session::delete('files');
     }
 
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param int $offset
+     * @param int $limit
+     * @param array $params
+     * @return array|int|mixed
+     */
+    public function readSet($offset = 0, $limit = 10, $params = array())
+    {
+        $select = Db::select('*')
+            ->from('dishes', 'd');
+
+        if ($limit) {
+            $selectPart = $select->getQueryPart('select');
+            $selectPart = 'SQL_CALC_FOUND_ROWS ' . current($selectPart);
+            $select->select($selectPart);
+
+            $select->setLimit($limit);
+            $select->setOffset($offset);
+        }
+
+        $result = $select->execute('\\Application\\Menu\\Row');
+
+        if ($limit) {
+            $total = Db::fetchOne('SELECT FOUND_ROWS()');
+        } else {
+            $total = sizeof($result);
+        }
+
+        if (sizeof($result) < $total && Request::METHOD_GET == Request::getMethod()) {
+            Response::setStatusCode(206);
+            Response::setHeader(
+                'Content-Range',
+                'items '.$offset.'-'.($offset+sizeof($result)).'/'. $total
+            );
+        }
+
+        return $result;
+    }
 
 }

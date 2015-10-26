@@ -16,12 +16,7 @@
             <?php if (!empty($dishMedia) && is_array($dishMedia)): ?>
                 <?php foreach ($dishMedia as $i => $media): ?>
                     <div class="panel panel-default col-lg-3">
-                        <div class="panel-heading">
-                            <div class="pull-right">
-                                <input type="checkbox" name="media[]"
-                                       value="<?= $media->id ?>" <?= ('checked') ?>/>
-                            </div>
-                        </div>
+
                         <div class="panel-body">
                             <a href="<?= $this->baseUrl($media['file']) ?>"
                                class="thumbnail bluz-preview">
