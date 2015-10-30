@@ -17,6 +17,7 @@ use Bluz\Proxy\Config;
 use Bluz\Proxy\Db;
 use Bluz\Proxy\Request;
 use Bluz\Proxy\Response;
+use Bluz\Proxy\Messages;
 
 class Crud extends \Bluz\Crud\Table
 {
@@ -30,8 +31,21 @@ class Crud extends \Bluz\Crud\Table
     public function updateOne($primary, $data)
     {
 
-        $this->saveAdditionData($data);
-        return parent::updateOne($primary, $data);
+        try {
+
+            Db::handler()->beginTransaction();
+            $this->saveAdditionData($data);
+            $response = parent::updateOne($primary, $data);
+            //Db::delete('wertwert')->where(['ee' => 3333])->execute();
+
+            Db::handler()->commit();
+            return $response;
+
+        } catch (\PDOException $e) {
+
+            Db::handler()->rollBack();
+            throw $e;
+        }
     }
 
 
@@ -41,10 +55,26 @@ class Crud extends \Bluz\Crud\Table
      */
     public function createOne($data)
     {
-        $id = parent::createOne($data);
-        $this->saveAdditionData($data);
-        return $id;
+        try {
+
+            Db::handler()->beginTransaction();
+            $data['id'] = reset(parent::createOne($data));
+
+            $this->saveAdditionData($data);
+
+
+            Db::handler()->commit();
+
+            return $data['id'];
+
+        } catch (\PDOException $e) {
+
+            Db::handler()->rollBack();
+            throw $e;
+        }
+
     }
+
 
     /**
      * @throws Exception
@@ -68,7 +98,6 @@ class Crud extends \Bluz\Crud\Table
                     'dishId' => $data['id'],
                     'mediaId' => reset($mediaId)
                 );
-
                 $row = $dishesMedia::create($dishesMediaArray);
                 $row->setFromArray($dishesMediaArray);
                 $row->save();
@@ -89,19 +118,19 @@ class Crud extends \Bluz\Crud\Table
      */
     public function readSet($offset = 0, $limit = 10, $params = array())
     {
-        $select = Db::select('*')
-            ->from('dishes', 'd');
+
+        $select = $this->getTable()->select();
+
 
         if ($limit) {
             $selectPart = $select->getQueryPart('select');
             $selectPart = 'SQL_CALC_FOUND_ROWS ' . current($selectPart);
-            $select->select($selectPart);
-
-            $select->setLimit($limit);
-            $select->setOffset($offset);
+            $select->select($selectPart)
+                ->setLimit($limit)
+                ->setOffset($offset);
         }
 
-        $result = $select->execute('\\Application\\Menu\\Row');
+        $result = $select->execute();
 
         if ($limit) {
             $total = Db::fetchOne('SELECT FOUND_ROWS()');
@@ -113,11 +142,38 @@ class Crud extends \Bluz\Crud\Table
             Response::setStatusCode(206);
             Response::setHeader(
                 'Content-Range',
-                'items '.$offset.'-'.($offset+sizeof($result)).'/'. $total
+                'items ' . $offset . '-' . ($offset + sizeof($result)) . '/' . $total
             );
         }
 
         return $result;
+    }
+
+
+    /***
+     * @param mixed $primary
+     * @return \Bluz\Db\Row
+     * @throws \Bluz\Application\Exception\NotFoundException
+     */
+
+    public function readOne($primary)
+    {
+        $filesArray = unserialize(Session::get('files'));
+        $path = Config::getModuleData('menu', 'full_path');
+
+        if ($filesArray) {
+            foreach ($filesArray as $file) {
+                $filename = $path . $file->getFullName();
+
+                if (is_file($filename)) {
+                    unlink($filename);
+                }
+            }
+        }
+        Session::delete('files');
+
+        return parent::readOne($primary);
+
     }
 
 }

@@ -15,7 +15,6 @@ use Bluz\Proxy\Response;
  * Class CrudTest
  * @package Application\Tests\Menu
  */
-
 class CrudTest extends ControllerTestCase
 {
 
@@ -23,10 +22,11 @@ class CrudTest extends ControllerTestCase
 
 
     protected $validData = array(
-        'title'       => 'tenderloins',
+        'id' => '',
+        'title' => 'tenderloins',
         'description' => 'meet',
-        'categoryId'  => 17,
-        'cost'     => 34.2
+        'categoryId' => 17,
+        'cost' => 34.2
     );
 
 
@@ -49,6 +49,20 @@ class CrudTest extends ControllerTestCase
         parent::setUp();
         $this->getApp()->useLayout(false);
         $this->setupSuperUserIdentity();
+
+    }
+
+
+    /**
+     * tearDown
+     *
+     */
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->deleteTestDish();
+
     }
 
 
@@ -70,22 +84,11 @@ class CrudTest extends ControllerTestCase
 
     public function testEditForm()
     {
-        $this->dispatchRouter($this->uri, ['id' => 5]);
+        $this->createTestDish();
+        $id=$this->getTestDish();
+        $this->dispatchRouter($this->uri, ['id' => $id]);
         $this->assertOk();
-
         $this->assertQueryCount('form[method="PUT"]', 1);
-        $this->assertQueryCount('input[name="id"][value="5"]', 1);
-    }
-
-
-    /**
-     * GET request with wrong ID record should return ERROR 404
-     */
-
-    public function testEditFormError()
-    {
-        $this->dispatchRouter($this->uri, ['id' => 100042]);
-        $this->assertResponseCode(404);
     }
 
 
@@ -95,36 +98,45 @@ class CrudTest extends ControllerTestCase
 
     public function testCreateDish()
     {
+
         //delete dish with valid data
-
-        if ($this->getTestDish()) {
-            $this->deleteTestDish();
-        }
-
         $this->dispatchUri($this->uri, $this->validData,
             Http\Request::METHOD_POST);
         $this->assertOk();
+
         //if dish exist return true
         $this->assertTrue((bool)$this->getTestDish());
-        $this->deleteTestDish();
     }
 
 
     /**
-     *POST request with wrong params
-     * */
+     * POST request should create a dish
+     */
 
-    public function testCreateWrongDish()
+    public function testCreateDishWithoutPrivileges()
     {
-        foreach ($this->invalidFields as $key => $param) {
+        $this->setupGuestIdentity();
+        //delete dish with valid data
+        $this->dispatchUri($this->uri, $this->validData,
+            Http\Request::METHOD_POST);
+        $this->assertResponseCode(403);
 
-            //create params with one invalid field
-            $params = array_replace($this->validData, [$key => $param]);
-            $this->dispatchUri($this->uri, $params, Http\Request::METHOD_POST);
-            $this->assertOk();
-            $this->assertNotNull(Response::getBody()->errors);
+    }
 
-        }
+
+
+    /**
+     * POST request should create a dish
+     */
+
+    public function testEditDishWithoutPrivileges()
+    {
+        $this->setupGuestIdentity();
+        $dishID = $this->createTestDish();
+        $params = array_replace($this->validData, ['id' => $dishID]);
+        $this->dispatchUri($this->uri, $params, Http\Request::METHOD_PUT);
+        $this->assertResponseCode(403);
+
     }
 
 
@@ -134,10 +146,8 @@ class CrudTest extends ControllerTestCase
 
     public function testEditDish()
     {
-
         $dishID = $this->createTestDish();
         $params = array_replace($this->validData, ['id' => $dishID]);
-
         $this->dispatchUri($this->uri, $params, Http\Request::METHOD_PUT);
         $this->assertOk();
     }
@@ -155,30 +165,29 @@ class CrudTest extends ControllerTestCase
 
 
     /**
-     * wrong DELETE request
-     */
-    public function testWrongCrudDelete()
-    {
-        $this->dispatchRouter('/menu/crud/', null,
-            AbstractRequest::METHOD_DELETE);
-        $this->assertResponseCode(404);
-    }
-
-
-    /**
      *  DELETE request
      */
 
     public function testCrudDelete()
     {
-        //create dish (if not exist)
-        if (!$dishId = $this->getTestDish()) {
-            $dishId = $this->createTestDish();
-        }
+        $dishId = $this->createTestDish();
 
         $this->dispatchRouter('/menu/crud/', ['id' => $dishId],
             AbstractRequest::METHOD_DELETE);
         $this->assertOk();
+    }
+
+
+    /**
+     * wrong DELETE request
+     */
+
+    public function testWrongCrudDelete()
+    {
+
+        $this->dispatchRouter('/menu/crud/', null,
+            AbstractRequest::METHOD_DELETE);
+        $this->assertResponseCode(404);
     }
 
 
@@ -209,6 +218,7 @@ class CrudTest extends ControllerTestCase
     /**
      * create dish
      */
+
     private function createTestDish()
     {
         return Db::insert('dishes')->setArray($this->validData)->execute();

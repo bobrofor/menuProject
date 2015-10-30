@@ -9,7 +9,7 @@ return array(
     "connect" => array(
         "type" => "mysql",
         "host" => "menu.prj",
-        "name" => "test",
+        "name" => "phinx_test",
         "user" => "root",
         "pass" => "Tk090404",
         "options" => array(

@@ -69,19 +69,61 @@
                     </div>
                 </div>
 
-                <span class="btn btn-success fileinput-button">
+                <div class="container-fluid">
+
+
+                    <span class="btn btn-success fileinput-button">
                      <i class="glyphicon glyphicon-plus"></i>
                     <span>Select files...</span>
-                    <!-- The file input field used as target for the file upload widget -->
+                        <!-- The file input field used as target for the file upload widget -->
                     <input id="fileupload" type="file" name="files[]" multiple>
                 </span>
 
 
-                <br>
-                <!-- The container for the uploaded files -->
-                <div id="files" class="files">
+                    <br>
+                    <!-- The container for the uploaded files -->
+                    <div id="files" class="files">
+                    </div>
+
                 </div>
 
+
+                <div id='saved-media' class="container-fluid">
+
+                    <?php if (!empty($row->getRelations('Media'))): ?>
+                        <label>
+                            <h3>Saved media</h3>
+                        </label>
+
+                        <div>
+                            <?php foreach ($row->getRelations('Media') as $media) : ?>
+                                <div id="<?php echo  $media['id']?>" class="panel panel-default col-lg-3">
+                                    <div class="panel-heading">
+
+                                        <a  class='delete-media btn btn-xs btn-danger '
+                                            data-href="<?= $this->url('media', 'crud',
+                                            ['id' => $media['id']]) ?>"
+                                            data-id="<?php echo $media['id']?>"
+                                             data-method="delete">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </div>
+                                    <div class="panel-body">
+                                        <a href="<?= $this->baseUrl($media->file) ?>"
+                                           class="thumbnail bluz-preview">
+                                            <img style="height:80px"
+                                                 src="<?= $this->baseUrl($media->preview ?: $media->file) ?>"
+                                                 class="img-polaroid"
+                                                 alt="<?= $media->title ?>"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php endforeach ?>
+
+                        </div>
+
+                    <?php endif ?>
+                </div>
 
             </div>
             <div class="modal-footer">
@@ -92,7 +134,6 @@
             </div>
         </div>
     </form>
-
 
 <?php
 // need for plain request
