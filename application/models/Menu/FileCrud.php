@@ -64,9 +64,10 @@ class FileCrud extends \Bluz\Crud\Table
         }
         Session::set('files', serialize($fileObjects));
 
+        $file = $editor->getFile();
         return array(
             'id' => array_search($editor->getFile(), $fileObjects),
-            'path' => $relativePath . $editor->getFile()->getName()
+            'path' => $relativePath . $file->getName() . '.' . $file->getExtension()
         );
 
     }
