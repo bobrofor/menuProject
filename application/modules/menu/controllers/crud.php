@@ -9,6 +9,7 @@ use Application\Menu;
 use Bluz\Controller;
 
 
+
 return
     /**
      * @accept HTML
@@ -28,7 +29,6 @@ return
 
         $output = $crudController();
         $view->foodCategories = $foodCategories['children'];
-
         return $output;
 
     };

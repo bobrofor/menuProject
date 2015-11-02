@@ -1,8 +1,4 @@
 <?php
-/**
- * @copyright Bluz PHP Team
- * @link https://github.com/bluzphp/skeleton
- */
 
 /**
  * @namespace
@@ -17,10 +13,12 @@ use Bluz\Proxy\Config;
 use Bluz\Proxy\Db;
 use Bluz\Proxy\Request;
 use Bluz\Proxy\Response;
-use Bluz\Proxy\Messages;
+
 
 class Crud extends \Bluz\Crud\Table
 {
+
+
     /**
      * @param mixed $primary
      * @param array $data
@@ -111,8 +109,8 @@ class Crud extends \Bluz\Crud\Table
     /**
      * {@inheritdoc}
      *
-     * @param int $offset
-     * @param int $limit
+     * @param int   $offset
+     * @param int   $limit
      * @param array $params
      * @return array|int|mixed
      */
@@ -155,7 +153,6 @@ class Crud extends \Bluz\Crud\Table
      * @return \Bluz\Db\Row
      * @throws \Bluz\Application\Exception\NotFoundException
      */
-
     public function readOne($primary)
     {
         $filesArray = unserialize(Session::get('files'));

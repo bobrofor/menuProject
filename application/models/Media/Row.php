@@ -97,11 +97,11 @@ class Row extends \Bluz\Db\Row
      */
     protected function afterDelete()
     {
-        if (is_file(PATH_PUBLIC .'/'. $this->file)) {
-            @unlink(PATH_PUBLIC .'/'. $this->file);
+        if (is_file(PATH_PUBLIC . '/' . $this->file)) {
+            @unlink(PATH_PUBLIC . '/' . $this->file);
         }
-        if (is_file(PATH_PUBLIC .'/'. $this->preview)) {
-            @unlink(PATH_PUBLIC .'/'. $this->preview);
+        if (is_file(PATH_PUBLIC . '/' . $this->preview)) {
+            @unlink(PATH_PUBLIC . '/' . $this->preview);
         }
 
         DishesMedia\Table::delete(['mediaId'=>$this->id]);

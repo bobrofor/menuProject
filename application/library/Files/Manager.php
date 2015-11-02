@@ -13,18 +13,33 @@ use Bluz\Http\File;
 class Manager
 {
 
-
+    /**
+     * @var File
+     */
     protected $file;
 
+
+    /**
+     * @var
+     */
     protected $uploadPath;
 
-    public function __construct(File $file,$newPath)
+
+    /**
+     * Manager constructor.
+     * @param File $file
+     * @param      $newPath
+     */
+    public function __construct(File $file, $newPath)
     {
-        $this->file=$file;
-        $this->uploadPath=$newPath;
+        $this->file = $file;
+        $this->uploadPath = $newPath;
     }
 
 
+    /**
+     * @throws \Bluz\Request\RequestException
+     */
     public function renameFileName()
     {
 
@@ -51,17 +66,16 @@ class Manager
         $this->file->moveTo($this->uploadPath);
 
 
-
-
     }
 
 
+    /***
+     * @return File
+     */
     public function getFile()
     {
         return $this->file;
     }
-
-
 
 
 }

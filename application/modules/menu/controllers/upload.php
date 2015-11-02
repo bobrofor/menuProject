@@ -10,6 +10,7 @@ namespace Application;
 use Application\Menu;
 use Bluz\Controller;
 
+
 return
     /**
      * @privilege Upload
