@@ -1,8 +1,8 @@
 <?php
 
 
-
 namespace Application;
+
 /**
  * @privilege Management
  * @return void
@@ -13,7 +13,7 @@ return
     /**
      * @return \closure
      */
-    function () use ($view, $module, $controller){
+    function () use ($view, $module, $controller) {
 
         Layout::title('Menu Module');
         Layout::title('Append', Layout::POS_APPEND);

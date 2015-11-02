@@ -9,7 +9,6 @@ use Application\Menu;
 use Bluz\Controller;
 
 
-
 return
     /**
      * @accept HTML

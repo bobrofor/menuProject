@@ -18,7 +18,6 @@ use Application\DishesMedia;
  * Class Row
  * @package Application\Menu
  */
-
 class Row extends \Bluz\Db\Row
 {
     use Validator;
@@ -84,7 +83,7 @@ class Row extends \Bluz\Db\Row
 
     protected function afterDelete()
     {
-        DishesMedia\Table::delete(['mediaId'=>$this->id]);
+        DishesMedia\Table::delete(['mediaId' => $this->id]);
     }
 
 }

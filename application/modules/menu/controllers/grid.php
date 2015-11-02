@@ -16,7 +16,7 @@ return
      */
     function ($categoryID = null) use ($view, $module, $controller) {
         /**
-         * @var Bootstrap $this
+         * @var Bootstrap       $this
          * @var \Bluz\View\View $view
          */
         Layout::setTemplate('dashboard.phtml');
